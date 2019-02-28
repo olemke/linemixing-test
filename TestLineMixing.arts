@@ -78,7 +78,7 @@ VectorNLogSpace( p_grid, 41, 1000e2, 1 )
 abs_speciesSet( species=
             ["H2O-SelfContStandardType, H2O-ForeignContStandardType, H2O",
              "N2-SelfContStandardType", "O3",
-             "CO2"
+             "CO2-LM"
               ] )
 
 
