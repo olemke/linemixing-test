@@ -88,17 +88,26 @@ VectorNLogSpace( p_grid, 41, 1000e2, 1 )
 abs_speciesSet( species=
             ["H2O-SelfContStandardType, H2O-ForeignContStandardType, H2O",
              "N2-SelfContStandardType", "O3",
-             "CO2-LM"
+             "CO2-LM, CO2-CKDMT252"
               ] )
 
 
 # Sort the line file according to species
 # ---
 abs_lines_per_speciesCreateFromLines
-#WriteXML("ascii", abs_lines)
-abs_lineshapeDefine( shape="Faddeeva_Algorithm_916",
-                     forefactor="VVH",
-                     cutoff=750e9 )
+
+abs_lineshape_per_tgDefine(
+abs_species=abs_species,
+shape=[
+"Voigt_Kuntz6", "Voigt_Kuntz6", "Voigt_Kuntz6", "Faddeeva_Algorithm_916"
+],
+normalizationfactor=[
+"VVH",          "VVH",          "VVH",          "VVH"
+],
+cutoff=[
+750e9,          750e9,          750e9,          750e9
+]
+)
 
 
 # Atmospheric scenario
