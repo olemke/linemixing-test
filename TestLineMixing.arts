@@ -34,7 +34,17 @@ Copy( iy_space_agenda, iy_space_agenda__CosmicBackground )
 Copy( iy_surface_agenda, iy_surface_agenda__UseSurfaceRtprop )
 
 # on-the-fly absorption
-Copy( propmat_clearsky_agenda, propmat_clearsky_agenda__LookUpTable )
+#Copy( propmat_clearsky_agenda, propmat_clearsky_agenda__LookUpTable )
+AgendaSet( propmat_clearsky_agenda ){
+  Ignore(rtp_mag)
+  Ignore(rtp_los)
+  Ignore(rtp_nlte)
+  propmat_clearskyInit
+  propmat_clearskyAddFromLookup
+  propmat_clearskyForceNegativeToZero
+}
+
+NumericSet(lm_p_lim, 4)
 
 # sensor-only path
 Copy( ppath_agenda, ppath_agenda__FollowSensorLosPath )
@@ -88,7 +98,7 @@ abs_lines_per_speciesCreateFromLines
 #WriteXML("ascii", abs_lines)
 abs_lineshapeDefine( shape="Faddeeva_Algorithm_916",
                      forefactor="VVH",
-                     cutoff=-1 )
+                     cutoff=750e9 )
 
 
 # Atmospheric scenario
