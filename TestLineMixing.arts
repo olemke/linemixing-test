@@ -34,7 +34,6 @@ Copy( iy_space_agenda, iy_space_agenda__CosmicBackground )
 Copy( iy_surface_agenda, iy_surface_agenda__UseSurfaceRtprop )
 
 # on-the-fly absorption
-#Copy( propmat_clearsky_agenda, propmat_clearsky_agenda__LookUpTable )
 AgendaSet( propmat_clearsky_agenda ){
   Ignore(rtp_mag)
   Ignore(rtp_los)

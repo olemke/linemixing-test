@@ -33,16 +33,8 @@ Copy( iy_space_agenda, iy_space_agenda__CosmicBackground )
 # standard surface agenda (i.e., make use of surface_rtprop_agenda)
 Copy( iy_surface_agenda, iy_surface_agenda__UseSurfaceRtprop )
 
-# on-the-fly absorption
-#Copy( propmat_clearsky_agenda, propmat_clearsky_agenda__LookUpTable )
-AgendaSet( propmat_clearsky_agenda ){
-  Ignore(rtp_mag)
-  Ignore(rtp_los)
-  Ignore(rtp_nlte)
-  propmat_clearskyInit
-  propmat_clearskyAddFromLookup
-  propmat_clearskyForceNegativeToZero
-}
+# Lookup absorption
+Copy( propmat_clearsky_agenda, propmat_clearsky_agenda__LookUpTable )
 
 # sensor-only path
 Copy( ppath_agenda, ppath_agenda__FollowSensorLosPath )
