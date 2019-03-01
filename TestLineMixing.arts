@@ -44,7 +44,7 @@ AgendaSet( propmat_clearsky_agenda ){
   propmat_clearskyForceNegativeToZero
 }
 
-NumericSet(lm_p_lim, 4)
+NumericSet(lm_p_lim, 1e-4)
 
 # sensor-only path
 Copy( ppath_agenda, ppath_agenda__FollowSensorLosPath )
