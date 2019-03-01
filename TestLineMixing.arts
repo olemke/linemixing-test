@@ -74,7 +74,7 @@ cloudboxOff
 abs_linesReadFromLBLRTM(filename="aer_v_3.2",
                         fmin=0,
                         fmax=10000e12)
-VectorNLinSpace( f_grid, 100, 12e12, 24e12 )
+VectorNLinSpace( f_grid, 1000, 12e12, 24e12 )
 WriteXML("ascii", f_grid)
 
 
@@ -157,7 +157,7 @@ abs_xsec_agenda_checkedCalc
 atmfields_checkedCalc
 abs_lookupSetup
 abs_lookupCalc
-WriteXML("binary", abs_lookup)
+WriteXML("binary", abs_lookup, "abslookup_lm.xml")
 # Perform RT calculations
 # ---
 abs_xsec_agenda_checkedCalc
@@ -167,6 +167,6 @@ atmgeom_checkedCalc
 cloudbox_checkedCalc
 sensor_checkedCalc
 yCalc
-WriteXML("ascii", y)
+WriteXML("ascii", y, "y_lm.xml")
 } # End of Main
  
