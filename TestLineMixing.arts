@@ -33,7 +33,7 @@ Copy( iy_space_agenda, iy_space_agenda__CosmicBackground )
 # standard surface agenda (i.e., make use of surface_rtprop_agenda)
 Copy( iy_surface_agenda, iy_surface_agenda__UseSurfaceRtprop )
 
-# on-the-fly absorption
+# Lookup absorption
 AgendaSet( propmat_clearsky_agenda ){
   Ignore(rtp_mag)
   Ignore(rtp_los)
@@ -42,8 +42,6 @@ AgendaSet( propmat_clearsky_agenda ){
   propmat_clearskyAddFromLookup
   propmat_clearskyForceNegativeToZero
 }
-
-NumericSet(lm_p_lim, 1e-4)
 
 # sensor-only path
 Copy( ppath_agenda, ppath_agenda__FollowSensorLosPath )
@@ -65,30 +63,22 @@ jacobianOff
 #
 cloudboxOff
 
-
-# Read a line file and a matching small frequency grid
+# Definition of species
 # ---
-#abs_linesReadFromHitran(filename="HITRAN2012.par",
-#Touch(abs_lines)
+abs_speciesSet( species=
+            ["H2O, H2O-SelfContCKDMT252, H2O-ForeignContCKDMT252",
+             "N2, N2-CIArotCKDMT252, N2-CIAfunCKDMT252",
+             "O3",
+             "O2, O2-CIAfunCKDMT100",
+             "CO2-LM, CO2-CKDMT252"
+            ] )
+
 abs_linesReadFromLBLRTM(filename="aer_v_3.2",
                         fmin=0,
                         fmax=10000e12)
 VectorNLinSpace( f_grid, 1000, 12e12, 24e12 )
-WriteXML("ascii", f_grid)
+WriteXML("ascii", f_grid, "f_grid.xml")
 
-
-# A pressure grid rougly matching 0 to 80 km, in steps of 2 km.
-# ---
-VectorNLogSpace( p_grid, 41, 1000e2, 1 )
-
-
-# Definition of species
-# ---
-abs_speciesSet( species=
-            ["H2O-SelfContStandardType, H2O-ForeignContStandardType, H2O",
-             "N2-SelfContStandardType", "O3",
-             "CO2-LM, CO2-CKDMT252"
-              ] )
 
 
 # Sort the line file according to species
@@ -98,13 +88,13 @@ abs_lines_per_speciesCreateFromLines
 abs_lineshape_per_tgDefine(
 abs_species=abs_species,
 shape=[
-"Voigt_Kuntz6", "Voigt_Kuntz6", "Voigt_Kuntz6", "Faddeeva_Algorithm_916"
+"Voigt_Kuntz6", "Voigt_Kuntz6", "Voigt_Kuntz6", "Voigt_Kuntz6", "Faddeeva_Algorithm_916"
 ],
 normalizationfactor=[
-"VVH",          "VVH",          "VVH",          "VVH"
+"VVH",          "VVH",          "VVH",          "VVH",          "VVH"
 ],
 cutoff=[
-750e9,          750e9,          750e9,          750e9
+750e9,          750e9,          750e9,          750e9,          750e9
 ]
 )
 
@@ -112,11 +102,16 @@ cutoff=[
 # Atmospheric scenario
 # ---
 AtmRawRead( basename = "testdata/tropical" )
+# A pressure grid rougly matching 0 to 80 km, in steps of 2 km.
+# ---
+#VectorNLogSpace( p_grid, 41, 1000e2, 1 )
+p_gridFromZRaw( p_grid, z_field_raw,0 )
+
 
 
 # Weakly reflecting surface
 # ---
-VectorSetConstant( surface_scalar_reflectivity, 1, 0.8 )
+VectorSetConstant( surface_scalar_reflectivity, 1, 0 )
 Copy( surface_rtprop_agenda,
       surface_rtprop_agenda__Specular_NoPol_ReflFix_SurfTFromt_surface )
 
@@ -126,19 +121,6 @@ sensorOff
 
 
 StringSet( iy_unit, "1" )
-
-
-# Extract radiative background and optical depth as auxiliary variables
-# ---
-ArrayOfStringSet( iy_aux_vars, [ "Optical depth", "Radiative background" ] )
-# Create vector container for the optical depth
-VectorCreate( odepth )
-
-
-
-#########################################################################
-# 1D
-#########################################################################
 
 # Atmosphere and surface
 # ---
@@ -150,13 +132,13 @@ Extract( t_surface, t_field, 0 )
 # Definition of sensor position and LOS
 # ---
 MatrixSetConstant( sensor_pos, 1, 1, 600e3 )
-MatrixSet( sensor_los, [ 180] )
+MatrixSet( sensor_los, [ 180 ] )
 
 abs_xsec_agenda_checkedCalc
 atmfields_checkedCalc
 abs_lookupSetup
 abs_lookupCalc
-WriteXML("binary", abs_lookup, "abslookup_lm.xml")
+WriteXML("binary", abs_lookup, "abs_lookup.xml")
 # Perform RT calculations
 # ---
 abs_xsec_agenda_checkedCalc
@@ -166,6 +148,6 @@ atmgeom_checkedCalc
 cloudbox_checkedCalc
 sensor_checkedCalc
 yCalc
-WriteXML("ascii", y, "y_lm.xml")
+WriteXML("ascii", y, "y.xml")
 } # End of Main
  
