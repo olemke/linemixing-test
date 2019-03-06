@@ -40,7 +40,7 @@ AgendaSet( propmat_clearsky_agenda ){
   Ignore(rtp_nlte)
   propmat_clearskyInit
   propmat_clearskyAddFromLookup
-  propmat_clearskyForceNegativeToZero
+  #propmat_clearskyForceNegativeToZero
 }
 
 # sensor-only path
@@ -73,7 +73,8 @@ abs_speciesSet( species=
              "CO2-LM, CO2-CKDMT252"
             ] )
 
-abs_linesReadFromLBLRTM(filename="aer_v_3.2",
+abs_linesReadFromLBLRTM(filename="aer_v_3.6",
+#abs_linesReadFromArts(filename="convert/aer_arts.xml",
                         fmin=0,
                         fmax=10000e12)
 VectorNLinSpace( f_grid, 1000, 12e12, 24e12 )
